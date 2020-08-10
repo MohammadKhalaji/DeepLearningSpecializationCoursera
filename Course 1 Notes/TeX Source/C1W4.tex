@@ -1,0 +1,124 @@
+\subsection{Notation}
+\begin{itemize}
+	\item $L$: Number of Layers (\# hidden + one output layer)
+	\item $n^{[l]}$: Number of Neurons in Layer $l$
+	\item $g^{[l]}$: The Activation Function in Layer $l$
+	\item $w^{[l]}$: The Weights for $z^{[l]}$
+	\item $b^{[l]}$: The Biases for $z^{[l]}$
+\end{itemize}
+\subsection{Forward Propagation}
+The non-vectorized version is not included here. However, this is how the vectorized version works given $X_{n_x\times m}$ as the input matrix ($L=4$):
+$$
+Z\lay{1} = W\lay{1} X+ b\lay{1}
+$$
+$$
+A\lay{1} = g\lay{1}(Z\lay{1})
+$$
+$$
+Z\lay{2} = W\lay{2}A\lay{1}+b\lay{2}
+$$
+$$
+A\lay{2} = g\lay{2}(Z\lay{2})
+$$
+$$
+Z\lay{3} = W\lay{3}A\lay{2}+b\lay{3}
+$$
+$$
+A\lay{3} = g\lay{3}(Z\lay{3})
+$$
+$$
+Z\lay{4} = W\lay{4}A\lay{3}+b\lay{4}
+$$
+$$
+\Yhat = A\lay{4} = g\lay{4}(Z\lay{4})
+$$
+%\newpage
+\subsection{Getting Matrix Dimensions Right}
+Consider a neural network in which $n_x=2$, $L=5$, $n\lay{1}=3$, $n\lay{2}=5$, $n\lay{3}=4$, $n\lay{4}=2$, and $n\lay{5}=1$. Only the vectorized version is included here. 
+
+\begin{neuralnetwork}[]
+        \newcommand{\x}[2]{$x_#2$}
+        \newcommand{\y}[2]{$\hat{y}$}
+        \newcommand{\hfirst}[2]{\small $a^{[1]}_#2$}
+        \newcommand{\hsecond}[2]{\small $a^{[2]}_#2$}
+        \newcommand{\hthird}[2]{\small $a^{[3]}_#2$}
+        \newcommand{\hfourth}[2]{\small $a^{[4]}_#2$}
+        \inputlayer[count=2, bias=false, title=0, text=\x]
+        \hiddenlayer[count=3, bias=false, title=1, text=\hfirst] \linklayers
+        \hiddenlayer[count=5, bias=false, title=2, text=\hsecond] \linklayers
+        \hiddenlayer[count=4, bias=false, title=3, text=\hthird] \linklayers
+        \hiddenlayer[count=2, bias=false, title=4, text=\hfourth] \linklayers
+        \outputlayer[count=1, title=5, text=\y] \linklayers
+\end{neuralnetwork}
+$$
+Z\lay{1} = W\lay{1}X + b\lay{1} \rightarrow X_{n_x\times m}, W\lay{1}_{n\lay{1}\times n_x}, b\lay{1}_{n\lay{1}\times 1}
+$$
+$$
+Z\lay{2} = W\lay{2}A\lay{1} + b\lay{2} \rightarrow A\lay{1}_{n\lay{1}\times m}, W\lay{2}_{n\lay{2}\times n\lay{1}}, b\lay{2}_{n\lay{2}\times 1}
+$$
+As a general rule: 
+$$
+W\lay{l}.shape = n\lay{l}\times n\lay{l-1}
+$$
+$$
+b\lay{l}.shape = n\lay{l}\times 1
+$$
+$$
+Z\lay{l}.shape = A\lay{l}.shape = n\lay{l}\times m
+$$
+%\newpage
+\subsection{Building Blocks of A Deep Neural Network}
+Consider this neural network as an example: 
+
+\begin{neuralnetwork}[]
+        \newcommand{\x}[2]{$x_#2$}
+        \newcommand{\y}[2]{$\hat{y}$}
+        \newcommand{\hfirst}[2]{\small $a^{[1]}_#2$}
+        \newcommand{\hlth}[2]{\small $a^{[l]}_#2$}
+        \newcommand{\hLminusth}[2]{\small $a^{[L-1]}_#2$}
+        \inputlayer[count=3, bias=false, title=0, text=\x]
+        \hiddenlayer[count=4, bias=false, title=1\dots, text=\hfirst] \linklayers
+        \hiddenlayer[count=4, bias=false, title=l, text=\hlth] \linklayers
+        \hiddenlayer[count=4, bias=false, title=\dots L-1, text=\hLminusth] \linklayers
+        \outputlayer[count=1, title=L, text=\y] \linklayers
+\end{neuralnetwork}
+
+In layer $l$: 
+\begin{itemize}
+	\item Parameters: $W\lay{l}, b\lay{l}$
+	\item Input: $a\lay{l-1}$
+	\item Output: $z\lay{l}$
+	\item Cache: $z\lay{l}, W\lay{l}, b\lay{l}$
+	\item Backward Input: $da\lay{l}$
+	\item Backward Output: $da\lay{l-1}, dW\lay{l}, db\lay{l}$
+\end{itemize}
+
+So, the backward step takes $da\lay{l}$ as input, and outputs $da\lay{l-1}, dW\lay{l}, db\lay{l}$. How?
+
+Non-vectorized version: 
+$$
+dz\lay{l} = da\lay{l} * g^\lay[']{l}(z\lay{l})
+$$
+$$
+dW\lay{l} = dz\lay{l} . a\lay{l-1}
+$$
+$$
+db\lay{l} = dz\lay{l}
+$$
+$$
+da\lay{l-1} = W\lay[T]{l} . dz\lay{l}
+$$
+
+Vectorized version: 
+$$
+dZ\lay{l} = dA\lay{l} * g^\lay[']{l}(Z\lay{l})
+$$
+$$
+dW\lay{l} = \frac{1}{m} dZ\lay{l} . A\lay[T]{l-1}
+$$
+$$
+db\lay{l} = \frac{1}{m} np.sum(dZ\lay{l}, axis=1, keepDims=True)
+$$ 
+$$
+dA\lay{l-1} = W\lay[T]{l}.dZ\lay{l}
+$$
