@@ -102,3 +102,192 @@ $$
     \includegraphics[scale=0.2]{images/tanh.png}
     \centering
 \end{figure}
+
+\subsection{Dropout Regularization}
+For each node in the network, set some probability for eliminating it. After selecting the to-be-eliminated nodes, remove all the outgoing and incoming links from and to that node, and then do backpropagation on the diminished network.
+
+\begin{figure}[H]
+    \includegraphics[scale=0.35]{images/dropout.png}
+    \centering
+\end{figure}
+
+Since you are training a much smaller network \emph{on each example}, you will end up with a regularized network.
+
+\textbf{Dropout Implementation (Inverted Dropout):} Keep in mind that this works for both the vectorized version and the non-vectorized version. Given $l=3$, $keepProb=0.8$: 
+$$
+d\lay{3} = np.random.rand(a\lay{3}.shape)
+$$
+$$
+a\lay{3} = d\lay{3} \ast a\lay{3}
+$$
+$$
+a\lay{3} /= keepProb
+$$
+
+What does the last line do? It keps the expected value of $a\lay{3}$ stable so as to not reduce the value of $z\lay{4} = W\lay{4}a\lay{3}+b\lay{4}$. 
+
+Obviously, there will be no dropout in the test phase, because we do not want to use a random element in our final computation. 
+
+\subsection{Understanding Dropout}
+Consider this one particular purple neuron: 
+
+\begin{neuralnetwork}[]
+    \newcommand{\x}[2]{$x_#2$}
+    \newcommand{\y}[2]{$\hat{y}$}
+    \newcommand{\hsecond}[2]{\small $neuron$}
+    \inputlayer[count=4, bias=false, title=, text=\x]
+    \hiddenlayer[count=1, bias=false, title=, text=\hsecond] \linklayers
+\end{neuralnetwork}
+
+As you can see, it relies on 4 features for its value, as a result, using droupout makes the network reluctant to rely heavily on \emph{one} particular feature, employing a more \emph{egalitarian} approach. Droupout has a similar effect to $L_2$ regularization's. 
+
+Another worthy note: It is good practice to keep $keepProp$ variable according to the layer: 
+
+\begin{neuralnetwork}[]
+    \newcommand{\x}[2]{$x_#2$}
+    \newcommand{\y}[2]{$\hat{y}$}
+    \newcommand{\hfirst}[2]{\small $a^{[1]}_#2$}
+    \newcommand{\hsecond}[2]{\small $a^{[2]}_#2$}
+    \newcommand{\hthird}[2]{\small $a^{[3]}_#2$}
+    \newcommand{\hfourth}[2]{\small $a^{[4]}_#2$}
+
+    \inputlayer[count=3, bias=false, title=, text=\x]
+    \hiddenlayer[count=7, bias=false, title=, text=\hfirst] \linklayers
+    \hiddenlayer[count=7, bias=false, title=, text=\hsecond] \linklayers
+    \hiddenlayer[count=3, bias=false, title=, text=\hthird] \linklayers
+    \hiddenlayer[count=2, bias=false, title=, text=\hfourth] \linklayers
+    \outputlayer[count=1, title=, text=\y] \linklayers
+\end{neuralnetwork}
+
+
+You might choose to use a lower $keepProb$ for layers that have more parameters, because you are more worried about their overfitting ($l=2$ for example). 
+
+\subsection{Other Regularization Methods}
+\textbf{Data Augmentation:} Rotating, flipping, distorting and scaling train data images, for example. 
+
+\textbf{Early Stopping:} 
+\begin{figure}[H]
+    \includegraphics[scale=0.35]{images/earlystop.png}
+    \centering
+\end{figure}
+
+It does have a downside though, according to the \emph{orthogonalization} principle, we want to worry about one thing at a time. So worrying about the minimization of $J$, and worrying about not overfitting should be handled separately. Early stopping prevents us from doing that. 
+
+\subsection{Normalizing Inputs}
+
+\begin{enumerate}
+    \item \textbf{Subtract Mean:}
+    $$
+    \mu = \frac{1}{m}\sum_{i=1}^{m} X^{(i)}
+    $$
+    $$
+    X^{(i)} = X^{(i)} - \mu\ \ \ \ \ \ \ \forall\ 1 \leq i \leq m
+    $$
+    \item \textbf{Normalize Variance:}
+    $$
+    \sigma^2 = \frac{1}{m}\sum_{i=1}^{m} X^{(i)}\ast\ast\ 2
+    $$
+    $$
+    X^{(i)} = X^{(i)} / \sigma^2\ \ \ \ \ \ \ \forall\ 1 \leq i \leq m
+    $$
+\end{enumerate}
+
+\textbf{Important:} Use the same $\mu, \sigma^2$ to normalize your test set. DO NOT normalize train/dev/test sets with different values of $\mu, \sigma^2$.
+
+\begin{figure}[H]
+    \includegraphics[scale=0.35]{images/normalize.png}
+    \centering
+\end{figure}
+
+\subsection{Exploding/Vanishing Gradients}
+Consider the following deep network, where $g\lay{l}(z)=z, b\lay{l}=0$ in all layers: 
+
+\begin{neuralnetwork}[]
+    \newcommand{\x}[2]{$x_#2$}
+    \newcommand{\y}[2]{$\hat{y}$}
+    \newcommand{\hfirst}[2]{\small $\ $}
+    \newcommand{\hsecond}[2]{\small $\ $}
+    \newcommand{\hthird}[2]{\small $\ $}
+    \newcommand{\hfourth}[2]{\small $\ $}
+
+    \inputlayer[count=2, bias=false, title=, text=\x]
+    \hiddenlayer[count=2, bias=false, title=, text=\hfirst] \linklayers
+    \hiddenlayer[count=2, bias=false, title=, text=\hsecond] \linklayers
+    \hiddenlayer[count=2, bias=false, title=, text=\hthird] \linklayers
+    \hiddenlayer[count=2, bias=false, title=, text=\hfourth] \linklayers
+    \hiddenlayer[count=2, bias=false, title=, text=\hfourth] \linklayers
+    \outputlayer[count=1, title=, text=\y] \linklayers
+\end{neuralnetwork}
+
+$$
+\yhat = W\lay{L}W\lay{L-1}\dots W\lay{2}W\lay{1}X 
+$$
+
+If we have either of the scenarios below, the final $\yhat$ will be either exponentially big or small, making it very difficult to train the network. 
+
+$$
+W\lay{l} = \begin{bmatrix}
+    1.5 & 0\\
+    0 & 1.5
+\end{bmatrix} \Rightarrow \yhat = W\lay{L} (1.5)^{L-1} X
+$$
+
+
+$$
+W\lay{l} = \begin{bmatrix}
+    0.5 & 0\\
+    0 & 0.5
+\end{bmatrix} \Rightarrow \yhat = W\lay{L} (0.5)^{L-1} X
+$$
+
+
+There is a \emph{partial} solution to this problem, which is careful initialization of the weights. 
+
+\subsection{Weight Initialization in a Deep Network}
+Consider this single neuron example, $b=0$: 
+
+\begin{neuralnetwork}[]
+    \newcommand{\x}[2]{$x_#2$}
+    \newcommand{\y}[2]{$\hat{y}$}
+    \newcommand{\hsecond}[2]{\small $z\Big|a$}
+    \inputlayer[count=4, bias=false, title=, text=\x]
+    \hiddenlayer[count=1, bias=false, title=, text=\hsecond] \linklayers
+\end{neuralnetwork}
+
+$$
+z = w_1 x_1 + \dots + w_n x_n
+$$
+
+Now we don't want $z$ to become too big or too small, so with larger $n$, we want smaller $w_i$s. One solution is to set $Variance(w_i)=\frac{1}{n}$.
+$$
+w\lay{l} = np.random.randn(shape) \ast np.sqrt(\frac{1}{n\lay{l-1}})
+$$
+
+(For ReLU activation functions, $Variance(w_i)=\frac{2}{n\lay{l-1}}$ works better)
+
+(For $tanh$ activation function, $Variance(w_i)=\sqrt{\frac{1}{n\lay{l-1}}}$ and $Variance(w_i)=\sqrt{\frac{2}{n\lay{l-1}+n\lay{n}}}$ work better)
+
+\subsection{Numerical Approximation of Gradients}
+$$
+g(\theta) \approx \frac{f(\theta + \epsilon) - f(\theta + \epsilon)}{2\epsilon}
+$$
+
+\subsection{Gradient Checking}
+To verify your backprop implementation is correct. 
+\begin{itemize}
+    \item Take all your parameters, $W\lay{1}, b\lay{1}, \dots, W\lay{L}, b\lay{L}$, and reshape them into a big vector $\theta$. 
+    \item Take all your gradients, $dW\lay{1}, db\lay{1}, \dots, dW\lay{L}, db\lay{L}$, and reshape them into a big vector $d\theta$. 
+    \item Now the question is: Is $d\theta$ the gradient of $J(\theta)$?
+\end{itemize}
+
+Here's how it's done: 
+\begin{itemize}
+    \item For each $i$: 
+    $$d\theta_{approx}[i]=\frac{J(\theta_1, \theta_2, \dots, \theta_i+\epsilon, \dots) - J(\theta_1, \theta_2, \dots, \theta_i-\epsilon, \dots)}{2\epsilon}$$ 
+    $$\approx d\theta[i] = \frac{\partial J}{\partial \theta_i}$$
+    \item Now that you have the two vectors $d\theta$ and $d\theta_{approx}$, compute this (the denominator is just a normalizer): 
+    $$
+    \frac{\norm{d\theta_{approx} - d\theta}_2}{\norm{d\theta_{approx}}_2 + \norm{d\theta}_2}, \epsilon = 10^{-7}
+    $$
+    \item If the result is $10^{-7}$ or smaller, your gradient is very likely to be working properly. However, you need to double check if the value is too big. 
+\end{itemize}
