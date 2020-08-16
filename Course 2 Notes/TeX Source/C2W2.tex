@@ -189,8 +189,8 @@ It basically takes momentum and RMSProp and puts them together as a new algorith
         $$s^{corrected}_{dW} = \frac{s_{dW}}{1-\beta_2^t}$$ 
         $$s^{corrected}_{db} = \frac{s_{db}}{1-\beta_2^t}$$ 
         \item[] Update parameters: 
-        $$W = W - \alpha\frac{v^{corrected}_{dW}}{\sqrt{s^{corrected}_{dW} + \epsilon}}$$ 
-        $$b = b - \alpha\frac{v^{corrected}_{db}}{\sqrt{s^{corrected}_{db} + \epsilon}}$$ 
+        $$W = W - \alpha\frac{v^{corrected}_{dW}}{\sqrt{s^{corrected}_{dW}} + \epsilon}$$ 
+        $$b = b - \alpha\frac{v^{corrected}_{db}}{\sqrt{s^{corrected}_{db}} + \epsilon}$$ 
     \end{itemize}
 \end{itemize}
 
