@@ -20,3 +20,5 @@
     * [01 - Initialization](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%202%20Assignments/W01%20-%2001%20-%20Initialization/Initialization.ipynb)
     * [02 - Regularization](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%202%20Assignments/W01%20-%2002%20-%20Regularization/Regularization%20-%20v2.ipynb)
     * [03 - Gradient Checking](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%202%20Assignments/W01%20-%2003%20-%20Gradient%20Checking/Gradient%20Checking%20v1.ipynb)
+2. Week 2 
+    * [01 - Optimization Methods](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%202%20Assignments/W02%20-%2001%20-%20Optimization%20Methods/Optimization%20methods.ipynb)
