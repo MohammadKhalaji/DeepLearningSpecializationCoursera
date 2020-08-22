@@ -1,0 +1,39 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{neuralnetwork}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+%\renewcommand{\chaptername}{Course}
+\preto{\section}{\clearpageafterfirst}
+\preto{\subsection}{\filbreak}
+\newcommand{\clearpageafterfirst}{%
+  \gdef\clearpageafterfirst{\clearpage}%
+}
+\newcommand{\yhat}{\hat{y}}
+\newcommand{\Yhat}{\hat{Y}}
+\newcommand{\lay}[2][]{^{[#2]#1}}
+\newcommand{\batch}[2][]{^{\{#2\}#1}}
+\newcommand{\idx}[2][]{^{(#2)#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\author{Mohammad Khalaji}
+\title{Course 3 - Structuring ML Projects}
+\begin{document}
+\maketitle
+% \chapter{Neural Networks and Deep Learning}
+\section{Week 1}
+\input{C3W1.tex}
+\newpage
+\section{Week 2}
+\input{C3W2.tex}
+\end{document}

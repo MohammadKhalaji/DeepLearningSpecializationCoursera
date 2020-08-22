@@ -1,0 +1,147 @@
+\subsection{Orthogonalization}
+What to tune in order to get specific optimization. 
+For example, in a TV, each knob is dedicated to tuning one and only one parameter. This makes it much easier to tune the TV. 
+As another example, if the steering wheel in a car changed the acceleration too, it would be extremely difficult to control the car properly. 
+In fact, the steering wheel, the break, and the acceleration pedal are orthogonal, and they make it much easier for the driver to control the car. 
+
+Chain of assumptions in ML: 
+\begin{itemize}
+    \item Fit training set well on cost function (in some occasions, comparable to human-level performance)
+        
+    How to tune?
+    \begin{itemize}
+        \item Adam
+        \item Bigger network
+    \end{itemize}
+    \item Fit dev set well on cost function
+    
+    How to tune?
+    \begin{itemize}
+        \item Regularization
+        \item Bigger train set
+    \end{itemize}
+    \item Fit test set well on cost function
+    
+    How to tune?
+    \begin{itemize}
+        \item Bigger dev set
+    \end{itemize}
+    \item Perform well in real world
+    
+    How to tune?
+    \begin{itemize}
+        \item Change dev set
+        \item Change the cost function
+    \end{itemize}
+\end{itemize}
+
+Normally, it is better not to use early stopping because it is a "knob" that modifies the performance on both training set and dev set. 
+
+\subsection{Single Number Evaluation Metrics}
+There often is a trade-off between precision and recall, and we care about both of them. As a result, 
+rather than using 2 numbers to compare different models, we only use one number. 
+
+$$
+F1 =  \frac{2}{\frac{1}{P}+\frac{1}{R}}\ (Harmonic\ Mean)
+$$
+
+\subsection{Satisficing and Optimizing Metrics}
+
+It's not always easy to have one single evaluation metric, while many important metrics are present. 
+
+\begin{table}[H]
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Classifier & Accuracy & Running Time \\ \hline
+    A          & 90\%     & 80ms         \\ \hline
+    B          & 92\%     & 95ms         \\ \hline
+    C          & 95\%     & 1500ms       \\ \hline
+    \end{tabular}
+\end{table}
+
+It is not a good idea to set $metric = accuracy - 0.5 \times runningTime$. 
+However we could take one approach: maximize the accuracy, and keep the running time below $100ms$. 
+This way, accuracy is a \textbf{Optimizing Metric}, whereas running time is a \textbf{Satisficing Metric}. 
+
+In another example, consider a situation where you are training a wakeword/trigger detector neural network. 
+Although accuracy is very important in this network, the number of false positives is a very important metric too because you don't want too wake your device up without a valid trigger.
+As a result, your metrics might be like this: 
+\begin{itemize}
+    \item Maximize accuracy (Optimizing Metric)
+    \item Keep the number of false positives at most 1 in every 24 hours (Satisficing Metric)
+\end{itemize}
+
+\subsection{Train/Dev/Test Sets Distribution}
+Dev and test sets must not come from different distributions. 
+Having dev and test sets from different distributions is like setting a target, 
+spend many month on reaching it, only to realize that you have moved the target
+to a different position for the testing phase!
+
+\subsection{Size of Dev and Test Sets}
+In the modern era of deep learning, dataset sizes are growing larger and larger. 
+In past, researchers would use a 60\%/20\%/20\% split for Train/Test/Dev sets. 
+However, when datasets have $1000000$ examples, for instance, using only 2\% of the data for 
+dev and test sets is reasonable because 1 percent of $1000000$ still contains a lot of examples.
+
+Size of your test set must be big enough to give us enough 
+confidence about the model. 
+
+Sometimes, a Train/Dev split is enough. However, it is not recommended. 
+
+\subsection{When to Change Dev/Test Sets}
+For example, when your model performs poorly on specific kinds of data, you 
+must add those kinds to your Dev/Test sets in order to train a more sensitive method.
+You can also change your metric in order to incorporate your sensitivity to that kinds of data. 
+
+
+\subsection{Why Human Level Performance?}
+Neural net models surpass human level performance quickly, but they struggle while trying to perform even better.
+This is because of \textbf{Bayes Optimal Error}, which is the best that we can possibly get. 
+Since humans are pretty good at doing certain tasks, the gap between human performance and Bayes error is small.
+As a result, it is difficult for AI models to get closer to Bayes error. 
+
+So long as ML is worse than humans, we can do the following: 
+\begin{itemize}
+    \item Get labeled data from humans
+    \item Analyze bias/variance 
+    \item Conduct manual error analysis
+\end{itemize}
+
+\subsection{Avoidable Bias}
+We don't want to do \emph{too well} on the train set. 
+When human error is 1\%, a model with 8\% error can be still improved. 
+However, when human error on your dataset is 7.5\%, a model with 8\% might not be bad at all!
+
+Take human error as a proxy for Bayes error. Then decide on whether to improve the bias or the variance. 
+\begin{itemize}
+    \item If there is a noticeable difference between train error and Bayes error ($\approx$ human error), focus on your bias problem in order to get closer to Bayes error.
+    \item Otherwise, focus on variance problem (if any)
+\end{itemize}
+
+The difference between Bayes error and human error is called the \textbf{Avoidable Bias}. 
+It means that there is some bias that you cannot possibly get below, unless you are overfitting, or you're dealing with special cases that are explained later. 
+
+\subsection{Surpassing Human Level Performance}
+\begin{itemize}
+    \item Online Advertising
+    \item Product Recommendations
+    \item Logistics (Predicting Transit Time)
+    \item Loan Approvals
+\end{itemize}
+
+Generally, they come from structured data, and they are not \emph{natural perception} problems (unlike image classification or NLP)
+
+\subsection{Improving Model Performance}
+To solve the problem of avoidable bias and getting closer to human-level performance: 
+\begin{itemize}
+    \item Train a bigger model
+    \item Train longer/better optimization algorithms
+    \item NN architecture/hyperparameters search 
+\end{itemize}
+
+To solve the problem of variance: 
+\begin{itemize}
+    \item More data
+    \item Regularization
+    \item NN architecture/hyperparameters search
+\end{itemize}
