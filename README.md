@@ -14,7 +14,9 @@
     * [02 - Deep Neural Network Application - Image Classification](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%201%20Assignments/W04%20-%2002%20-%20Deep%20Neural%20Network%20Application_%20Image%20Classification/Deep%20Neural%20Network%20-%20Application%20v8.ipynb)
 
 ## Course 2 - Hyperparameters, Regularization, and Optimization
-### Notes (IN PROGRESS)
+### Notes
+* [PDF](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%202%20Notes/Course%202%20-%20Hyperparameters%2C%20Regularization%2C%20and%20Optimization.pdf)
+* [Source](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/tree/master/Course%202%20Notes/TeX%20Source)
 ### Assignments
 1. Week 1
     * [01 - Initialization](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%202%20Assignments/W01%20-%2001%20-%20Initialization/Initialization.ipynb)
