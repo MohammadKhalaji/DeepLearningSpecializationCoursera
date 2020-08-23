@@ -1,0 +1,108 @@
+\subsection{Carrying Out Error Analysis}
+Manually examining the examples in which our network is not performing well. 
+Consider a cat classifier neural network that has 90\% accuracy, and most of examples on which the network performs poorly are dog pictures.
+As a result, should we try to make our classifier do better on dog pictures?
+\begin{itemize}
+    \item Collect 100 mislabeled dev set pictures
+    \item Count up to how many are dogs
+    \begin{itemize}
+        \item 5/100 are dog pictures. So if we try to do better on dog pictures, in the best case, the error will go from 10\% to 9.5\%. It's not worth it. 
+        \item 50/100 are dog pictures. So if we try to do better on dog pictures, in the best case, the error will go from 10\% to 5\%. It's not worth it. 
+    \end{itemize}
+\end{itemize}
+
+You can also take this approach for multiple kinds of mislabeled data. 
+
+\subsection{Cleaning Up Incorrectly Labeled Data}
+DL algorithms are quite robust to random errors in the training set. 
+So it is probably ok to leave the errors as they are, and not spend too much time fixing them. 
+
+However, DL algorithms are less robust to systematic errors: for example, all white dogs labeled as cats. 
+
+A good approach is to conduct an error analysis (like in previous subsection) about incorrectly labeled data. 
+In other words, for data examples that your classifier did well, but the actual data label was wrong. 
+Then study if it is worthwhile to fix incorrectly labeled data. Often, it is worth it because 
+you need to trust your dev set. 
+
+
+\subsection{Build Your First System Quickly, Then Iterate}
+\begin{itemize}
+    \item Set up dev/test sets and metric
+    \item Build initial system quickly
+    \item Use bias/variance analysis and error analysis to prioritize next steps
+\end{itemize}
+
+\subsection{Training and Testing on Different Distributions}
+Consider a situation where you have 200000 cat pictures from distribution A, and 10000 cat pictures from distribution B, 
+but the distribution you really care about is distribution B.
+As a result, shuffling 210000 examples might not be a good idea because a small number of data examples from distribution B will get into your dev/test sets. 
+Consequently, it is better if we assigned more data from distribution B to dev/test sets. 
+
+\subsection{Bias and Variance with Mismatched data}
+Sometimes the difference between train error and dev error is a lot, but it does not necessarily mean that we have a variance problem. 
+Maybe the distributions of train and dev sets are quite different. What to do?
+
+\textbf{Solution:} Keep a \emph{train-dev} set, which is of the same distribution as the train set, and it is not used for training.
+If the difference between train error and train-dev error is a lot, we do have a variance problem. 
+However, if the difference is not a lot, the problem is called the \emph{data mismatch problem}.  
+
+
+Another example: 
+\begin{table}[H]
+    \begin{tabular}{|c|c|}
+    \hline
+    Human Error & 0\%  \\ \hline
+    Train Error          &  10\%   \\ \hline
+    Train-Dev Error      & 11\% \\ \hline
+    Dev Error          & 20\% \\ \hline
+    \end{tabular}
+\end{table}
+
+We clearly have an avoidable bias problem, as well as the data mismatch problem, but not a variance problem. 
+
+The general principles: 
+\begin{itemize}
+    \item Avoidable bias: huge difference between human error and train error
+    \item Variance problem: huge difference between train error and train-dev error
+    \item Data Mismatch: huge difference between train-dev error and dev error
+    \item Overfitting to the Dev set: huge difference between dev error and test error
+\end{itemize}
+
+\subsection{How to Address the Data Mismatch Problem?}
+\begin{itemize}
+    \item Carry out an error analysis, and try to understand the differences between training set and dev and test sets
+    \item Make training data more similar; or collect more data similar to dev/test sets. 
+    \item Artificial data synthesis (e.g. add artificial noise, but with the caution that our model might overfit to the noise).
+    \item  
+\end{itemize}
+
+\subsection{Transfer Learning}
+Two main steps: 
+\begin{itemize}
+    \item Pre-training: Using the weights of NN A to initial the weights of NN B. 
+    \item Fine-tuning: Using the training data to update weights (selectively (don't have to re-train all weights)).  
+\end{itemize}
+
+It is especially useful for situations where there isn't enough training data available. Weights 
+from complex networks can be used for recognizing basic features in initial layers. 
+Needless to say, NN A and NN B must take similar inputs for their tasks in order to implement transfer learning. 
+
+\subsection{Multitask Learning}
+Building a single neural network that does multiple things. For example, for a 
+neural network corresponding to an autonomous car, it must be able to recognize many things such as
+pedestrians, cars, stop signs etc. As a result, we need a network that assigns \emph{multiple} labels
+to single inputs because it is possible for an image to contain both a pedestrian and a car, for instance.
+
+We might think that it would be better to train several neural networks for separate labels. But some 
+of the basic features are shared between those networks, and it does not make sense to train 
+multiple ones when multitask learning can even yield better results. 
+
+Another perk of using multitask learning is that labelers can put \emph{don't care} values for labels of different clases.
+
+When multitask learning makes sense: 
+
+\begin{itemize}
+    \item Training on a set of features that could benefit from having similar low-level features. 
+    \item Usually: amount of data you have for each task is quite similar. 
+    \item Can train a big enough neural network that performs well on all the tasks. 
+\end{itemize}
