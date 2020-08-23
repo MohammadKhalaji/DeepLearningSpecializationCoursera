@@ -27,5 +27,5 @@
 
 ## Course 3 - Structuring ML Projects
 ### Notes
-* [PDF]()
-* [Source]()
+* [PDF](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%203%20Notes/Course%203%20-%20Structuring%20ML%20Projects.pdf)
+* [Source](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/tree/master/Course%203%20Notes/TeX%20Source)
