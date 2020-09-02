@@ -29,3 +29,10 @@
 ### Notes
 * [PDF](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%203%20Notes/Course%203%20-%20Structuring%20ML%20Projects.pdf)
 * [Source](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/tree/master/Course%203%20Notes/TeX%20Source)
+
+## Course 4 - Convolutional Neural Networks and Computer Vision
+### Notes (IN PROGRESS)
+### Assignments 
+1. Week 1
+    * [01 - Convolution Model - Step by Step](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%204%20Assignments/W01%20-%2001%20-%20Convolution%20model%20-%20Step%20by%20Step/Convolution%20model%20-%20Step%20by%20Step%20-%20v2.ipynb)
+    * [02 - Convolution Model - Application](https://github.com/MohammadKhalaji/DeepLearningSpecializationCoursera/blob/master/Course%204%20Assignments/W01%20-%2002%20-%20Convolution%20model%20-%20Application/Convolutional%20Neural%20Net%20-%20Application%20-%20Keras.ipynb) (Done with Keras instead of the old Tensorflow 1.0)
